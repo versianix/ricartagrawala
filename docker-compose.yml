@@ -1,0 +1,64 @@
+services:
+  shared_resource:
+    container_name: shared
+    build:
+      context: .
+      dockerfile: "Dockerfile.SharedResource"
+    stdin_open: true 
+    tty: true 
+    ports:
+      - "10000:10000"
+
+  first_process:
+    container_name: p1
+    build:
+      context: .
+      dockerfile: "Dockerfile.Process"
+    command:
+      - "1"
+      - "p1:10001"
+      - "p2:10002"
+      - "p3:10003"
+      - "shared:10000"
+    depends_on:
+      - shared_resource
+    stdin_open: true 
+    tty: true  
+    ports:
+      - "10001:10001"
+
+  second_process:
+    container_name: p2
+    build:
+      context: .
+      dockerfile: "Dockerfile.Process"
+    command:
+      - "2"
+      - "p1:10001"
+      - "p2:10002"
+      - "p3:10003"
+      - "shared:10000"
+    depends_on:
+      - shared_resource
+    stdin_open: true 
+    tty: true  
+    ports:
+      - "10002:10002"
+
+  third_process:
+    container_name: p3
+    build:
+      context: .
+      dockerfile: "Dockerfile.Process"
+    command:
+      - "3"
+      - "p1:10001"
+      - "p2:10002"
+      - "p3:10003"
+      - "shared:10000"
+    depends_on:
+      - shared_resource
+    stdin_open: true 
+    tty: true  
+    ports:
+      - "10003:10003"
